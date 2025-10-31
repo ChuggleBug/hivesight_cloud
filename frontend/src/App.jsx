@@ -1,21 +1,24 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
 import './App.css'
 
-function MainHeader() {
-  return (
-    <p>Hi</p>
+import Home from './pages/Home.jsx'
 
-  );
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 
-}
+import AppHeader from './components/header';
+
 
 function App() {
-  const [count, setCount] = useState(0);
-
   return (
     <>
+      <Router>
+        <div className="flex flex-col min-h-screen w-screen">
+        <AppHeader />
+        <Routes>
+          <Route path="/" element={<Home />} />
+        </Routes>
+        </div>
+      </Router>
+      {/* <AppHeader></AppHeader>
       <div>
         <a href="https://vite.dev" target="_blank">
           <img src={viteLogo} className="logo" alt="Vite logo" />
@@ -35,7 +38,7 @@ function App() {
       </div>
       <p className="read-the-docs">
         Click on the Vite and React logos to learn more
-      </p>
+      </p> */}
     </>
   )
 }
