@@ -2,6 +2,7 @@ import './App.css'
 import Home from './pages/Home.jsx'
 import Login from './pages/Login.jsx'
 import Signup from './pages/Signup.jsx'
+import Video from './pages/Video.jsx'
 import { BrowserRouter as Router, Routes, Route} from 'react-router-dom';
 import AppHeader from './components/header';
 
@@ -15,6 +16,7 @@ function App() {
             <Route path="/" element={<Home />} />
             <Route path="/login" element={<Login />} />
             <Route path="/signup" element={<Signup />} />
+            <Route path="/video" element={<Video />} />
           </Routes>
         </div>
       </Router>
