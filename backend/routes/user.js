@@ -1,8 +1,7 @@
 import express from 'express'
 import jwt from "jsonwebtoken";
-import { MongooseError } from 'mongoose';
 
-import User from '../database/schema.js'
+import { User } from '../database/schema.js'
 
 const userRoutes = express.Router();
 

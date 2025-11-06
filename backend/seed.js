@@ -3,9 +3,10 @@ console.log('Configuring Environment...');
 configDotenv();
 
 import mongoose from 'mongoose';
+import fs from 'fs'
 
 import connectDB from './database/client.js'
-import User from './database/schema.js'
+import { User, Video } from './database/schema.js'
 
 console.log('Connecting to database');
 if (!connectDB()) {
@@ -36,6 +37,25 @@ const test_users = [
   },
 ];
 
+// Need to created
+const test_user_videos = [
+  {
+    username: 'user',
+    video_id: 1,
+    creation_date: new Date(1723905120 * 1000), // 2024-08-17T14:32:00Z
+  },
+  {
+    username: 'user',
+    video_id: 2,
+    creation_date: new Date(1741089300 * 1000), // 2025-03-04T09:15:00Z
+  },
+];
+// Creating videos
+fs.mkdirSync(`${process.env.VIDEO_ROOT_DIR}/video/${'user'}`, { recursive: true });
+test_user_videos.forEach(user_video => {
+  const video = new Video(user_video);
+  video.save();
+});
 
 test_users.forEach(async (element) => {
   const user = new User({
@@ -57,3 +77,4 @@ test_users.forEach(async (element) => {
     
     console.log(`User ${element.username} properly inserted!`);
 });
+

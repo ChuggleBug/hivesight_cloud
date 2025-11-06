@@ -31,7 +31,6 @@ const userSchema = new mongoose.Schema({
     }
 });
 
-console.log("Adding command hooks for User...")
 userSchema.pre("save", async function (next) {
     if (!this.isModified("password")) return next();
 
@@ -41,12 +40,34 @@ userSchema.pre("save", async function (next) {
     next();
 })
 
-console.log("Adding command comparePassword method...")
 userSchema.methods.comparePassword = async function (plainPassword) {
   return bcrypt.compare(plainPassword, this.password);
 };
 
+const videoSchema = new mongoose.Schema({
+    username: {
+        type: String,
+        required: [true, "Name is required"],
+        trim: true,
+        validate: {
+            validator: function(v) {
+                return !/\s/.test(v); // no spaces
+            },
+            message: props => `${props.value} should not contain spaces`
+        }
+    },
+    video_id: {
+        type: String,
+        required: [true, "Video ID is required"],
+        trim: true
+    },
+    creation_date: {
+        type: Date,
+        required: [true, "Creation date is required"],
+    }
+});
 
-const User = mongoose.model('user', userSchema);
+export const User = mongoose.model('user', userSchema);
+export const Video = mongoose.model('video', videoSchema)
 
-export default User
+export default { User, Video }

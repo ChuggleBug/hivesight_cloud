@@ -6,6 +6,7 @@ import express from 'express'
 import cors from 'cors'
 
 import userRoutes from './routes/user.js';
+import videoRoutes from './routes/video.js';
 
 import connectDB from './database/client.js'
 
@@ -39,6 +40,8 @@ app.get('/', (req, res) => {
 
 console.log('Adding user routes to /api/user...');
 app.use('/api/user', userRoutes);
+console.log('Adding video routes to /api/video...');
+app.use('/api/video', videoRoutes);
 
 
 app.listen(port, () => {
