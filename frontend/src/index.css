@@ -3,9 +3,10 @@
 @theme {
     --color-hvs-yellow: #EDB926;
     --color-hvs-black: #242424;
-    --color-hvs-white: #FFFFFF;
     --color-hvs-black-dark: #1A1A1A;
+    --color-hvs-white: #FFFFFF;
     --color-hvs-red: #D64545;
+    --color-hvs-red-dark: #A93232;
 }
 
 :root {
@@ -36,7 +37,35 @@ h1 {
   color: var(--color-hvs-white);
 }
 
-p {
+.hvs-text {
   font-size: 1.2em;
   color: var(--color-hvs-white);
 }
+
+
+/* in your global.css or App.css */
+.hvs_btn {
+  @apply w-32 rounded px-5 py-1 text-white bg-hvs-black transition-colors duration-200;
+}
+
+.hvs_btn:hover,
+.hvs_btn:focus {
+  @apply bg-hvs-black-dark shadow-xl;
+}
+
+.hvs_btn:active {
+  @apply bg-hvs-yellow text-black;
+}
+
+.hvs_trash {
+  color: var(--color-hvs-red);
+  display: inline-flex;
+  cursor: pointer;
+  transition: color 0.2s ease;
+}
+
+.hvs_trash:hover,
+.hvs_trash:focus {
+  color: var(--color-hvs-red-dark);
+}
+

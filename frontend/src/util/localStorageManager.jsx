@@ -10,8 +10,20 @@ class LocalStorageManager {
     return localStorage.getItem('user');
   }
 
+  static setCurrentUsername(username) {
+    return localStorage.setItem('user', username);
+  }
+
   static isLoggedIn() {
-    return false;
+    return Boolean(this.getAuthToken());
+  }
+
+  static setAuthToken(token) {
+    localStorage.setItem('token', token);
+  }
+
+  static getAuthToken() {
+    return localStorage.getItem('token');
   }
 }
 
