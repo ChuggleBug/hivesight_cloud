@@ -2,8 +2,10 @@ import { useEffect, useState } from "react";
 import { Play } from "lucide-react";
 import LocalStorageManager from "../util/localStorageManager";
 import apiFetch from "../util/apiFetch";
+import { useNavigate } from "react-router-dom";
 
 export default function Video() {
+  const navigate = useNavigate();
   const [image, setImage] = useState("/src/assets/default.jpg");
   const [videoUrl, setVideoUrl] = useState(null);
   const [eventDate, setEventDate] = useState("unknown");
@@ -75,6 +77,7 @@ export default function Video() {
       );
       alert("Video deleted successfully!");
       setShowDeleteModal(false);
+      navigate('/');
     } catch (err) {
       console.error(err);
       alert("Error deleting video.");
@@ -135,7 +138,7 @@ export default function Video() {
         </div>
       </div>
 
-      {/* 🧭 Delete Confirmation Modal */}
+      {/* Delete Confirmation Modal */}
       {showDeleteModal && (
         <div className="fixed inset-0 flex justify-center items-center bg-black/50 backdrop-blur-sm z-50">
           <div className="bg-hvs-yellow rounded-2xl shadow-xl p-8 w-[90%] max-w-md text-center">
