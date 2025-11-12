@@ -50,11 +50,12 @@ const test_user_videos = [
     creation_date: new Date(1741089300 * 1000), // 2025-03-04T09:15:00Z
   },
 ];
-// Creating videos
-fs.mkdirSync(`${process.env.VIDEO_ROOT_DIR}/video/${'user'}`, { recursive: true });
+// Creating videos 
+fs.mkdirSync(`${process.env.VIDEO_ROOT_DIR}/video/user`, { recursive: true });
 test_user_videos.forEach(user_video => {
   const video = new Video(user_video);
   video.save();
+  fs.copyFileSync(`${process.env.VIDEO_ROOT_DIR}/${video.video_id}`, `${process.env.VIDEO_ROOT_DIR}/video/user/${video.video_id}`);
 });
 
 test_users.forEach(async (element) => {
