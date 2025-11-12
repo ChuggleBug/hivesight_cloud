@@ -7,11 +7,11 @@ import { BrowserRouter as Router, Routes, Route} from 'react-router-dom';
 import AppHeader from './components/header';
 
 function App() {
-
   return (
     <Router>
-        <div className="flex flex-col h-screen w-screen">
-          <AppHeader />
+      <div className="flex flex-col h-screen w-screen">
+        <AppHeader />
+        <div className="flex-1 pt-15">
           <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/login" element={<Login />} />
@@ -19,9 +19,10 @@ function App() {
             <Route path="/video" element={<Video />} />
           </Routes>
         </div>
-      </Router>
-
-  )
+      </div>
+    </Router>
+  );
 }
+
 
 export default App
