@@ -1,6 +1,5 @@
 import { useState } from "react";
 import { useNavigate } from 'react-router-dom';
-import LocalStorageManager from "../util/localStorageManager";
 import apiFetch from "../util/apiFetch";
 
 function Login() {
@@ -32,8 +31,8 @@ function Login() {
             setError(data.error)
         }
 
-        LocalStorageManager.setAuthToken(data.token);
-        LocalStorageManager.setCurrentUsername(username);
+        localStorage.setItem('token', data.token);
+        localStorage.setItem('user', username);
         // Can go home now
         navigate('/');
         window.location.reload();

@@ -1,8 +1,6 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { FaRegUser } from "react-icons/fa";
-
-import LocalStorageManager from "../util/localStorageManager";
 import Sidebar from "./Sidebar";
 
 export default function AppHeader() {
@@ -11,7 +9,7 @@ export default function AppHeader() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
   useEffect(() => {
-    setUsername(LocalStorageManager.getCurrentUsername());
+    setUsername(localStorage.getItem('user'));
   }, []);
 
   return (
@@ -20,7 +18,7 @@ export default function AppHeader() {
         <p className="hvs-text">HiveSight</p>
       </button>
 
-      {LocalStorageManager.isLoggedIn() && (
+      {Boolean(localStorage.getItem('token')) && (
         <div className="flex items-center gap-2">
           <p className="hvs-text">Welcome, {username}</p>
           <button onClick={() => setSidebarOpen(true)}>

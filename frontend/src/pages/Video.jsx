@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
 import { Play } from "lucide-react";
-import LocalStorageManager from "../util/localStorageManager";
 import apiFetch from "../util/apiFetch";
 import { useNavigate } from "react-router-dom";
 
@@ -15,7 +14,7 @@ export default function Video() {
   // Fetch video preview (thumbnail + info)
   const fetchVideoInformation = async () => {
     const response = await apiFetch(
-      `/api/video/preview?user=${LocalStorageManager.getCurrentUsername()}&video_id=${localStorage.getItem(
+      `/api/video/preview?user=${localStorage.getItem('user')}&video_id=${localStorage.getItem(
         "video_id"
       )}`
     );
@@ -48,7 +47,7 @@ export default function Video() {
   // Fetch full video when play is clicked
   const fetchAndPlayVideo = async () => {
     const response = await apiFetch(
-      `/api/video/play?user=${LocalStorageManager.getCurrentUsername()}&video_id=${localStorage.getItem(
+      `/api/video/play?user=${localStorage.getItem('user')}&video_id=${localStorage.getItem(
         "video_id"
       )}`
     );
@@ -70,7 +69,7 @@ export default function Video() {
   const confirmDelete = async () => {
     try {
       await fetch(
-        `http://localhost:3000/api/video/delete?user=${LocalStorageManager.getCurrentUsername()}&video_id=${localStorage.getItem(
+        `http://localhost:3000/api/video/delete?user=${localStorage.getItem('user')}&video_id=${localStorage.getItem(
           "video_id"
         )}`,
         { method: "DELETE" }

@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import LocalStorageManager from "../util/localStorageManager";
 import VideoPreview from "../components/VideoPreview";
 import apiFetch from "../util/apiFetch";
 
@@ -19,7 +18,7 @@ function Home() {
         if (complete) {
             return;
         }
-        if (!LocalStorageManager.isLoggedIn()) {
+        if (!Boolean(localStorage.getItem('token'))) {
             navigate("/login");
         }
         getVideoPreveiews();
@@ -28,7 +27,7 @@ function Home() {
 
     const getVideoPreveiews = async () => {
         try {
-            const response = await apiFetch(`/api/video/previews?user=${LocalStorageManager.getCurrentUsername()}`)
+            const response = await apiFetch(`/api/video/previews?user=${localStorage.getItem('user')}`)
             if (!response.ok) {
                 return;
             }

@@ -1,7 +1,6 @@
 import { useState } from "react";
 import { FaRegTrashAlt } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
-import LocalStorageManager from "../util/localStorageManager";
 
 export default function VideoPreview({ id, image, creationDate }) {
   const [showDeleteModal, setShowDeleteModal] = useState(false);
@@ -31,7 +30,7 @@ export default function VideoPreview({ id, image, creationDate }) {
   const confirmDelete = async () => {
     try {
       const response = await fetch(
-        `http://localhost:3000/api/video/delete?user=${LocalStorageManager.getCurrentUsername()}&video_id=${id}`,
+        `http://localhost:3000/api/video/delete?user=${localStorage.getItem('user')}&video_id=${id}`,
         { method: "DELETE" }
       );
 
