@@ -36,6 +36,7 @@ function Login() {
         LocalStorageManager.setCurrentUsername(username);
         // Can go home now
         navigate('/');
+        window.location.reload();
     }
 
     return (
