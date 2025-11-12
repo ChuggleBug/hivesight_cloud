@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from 'react-router-dom';
 import LocalStorageManager from "../util/localStorageManager";
+import apiFetch from "../util/apiFetch";
 
 function Login() {
     const [error, setError] = useState("");
@@ -12,7 +13,7 @@ function Login() {
     const handleLogin = async (e) => {
         e.preventDefault();
 
-        const response = await fetch("http://localhost:3000/api/user/login", {
+        const response = await apiFetch("/api/user/login", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json"

@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { Play } from "lucide-react";
 import LocalStorageManager from "../util/localStorageManager";
+import apiFetch from "../util/apiFetch";
 
 export default function Video() {
   const [image, setImage] = useState("/src/assets/default.jpg");
@@ -11,8 +12,8 @@ export default function Video() {
 
   // Fetch video preview (thumbnail + info)
   const fetchVideoInformation = async () => {
-    const response = await fetch(
-      `http://localhost:3000/api/video/preview?user=${LocalStorageManager.getCurrentUsername()}&video_id=${localStorage.getItem(
+    const response = await apiFetch(
+      `/api/video/preview?user=${LocalStorageManager.getCurrentUsername()}&video_id=${localStorage.getItem(
         "video_id"
       )}`
     );
@@ -44,8 +45,8 @@ export default function Video() {
 
   // Fetch full video when play is clicked
   const fetchAndPlayVideo = async () => {
-    const response = await fetch(
-      `http://localhost:3000/api/video/play?user=${LocalStorageManager.getCurrentUsername()}&video_id=${localStorage.getItem(
+    const response = await apiFetch(
+      `/api/video/play?user=${LocalStorageManager.getCurrentUsername()}&video_id=${localStorage.getItem(
         "video_id"
       )}`
     );
