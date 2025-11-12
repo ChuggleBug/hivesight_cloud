@@ -10,6 +10,7 @@ export default function Video() {
   const [eventDate, setEventDate] = useState("unknown");
   const [eventTime, setEventTime] = useState("unknown");
   const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   // Fetch video preview (thumbnail + info)
   const fetchVideoInformation = async () => {
@@ -46,20 +47,27 @@ export default function Video() {
 
   // Fetch full video when play is clicked
   const fetchAndPlayVideo = async () => {
-    const response = await apiFetch(
-      `/api/video/play?user=${localStorage.getItem('user')}&video_id=${localStorage.getItem(
-        "video_id"
-      )}`
-    );
+    setLoading(true);
+    try {
+      const response = await apiFetch(
+        `/api/video/play?user=${localStorage.getItem('user')}&video_id=${localStorage.getItem(
+          "video_id"
+        )}`
+      );
 
-    if (!response.ok) {
-      console.log("Issue fetching video file");
-      return;
+      if (!response.ok) {
+        console.log("Issue fetching video file");
+        return;
+      }
+
+      const blob = await response.blob();
+      const url = URL.createObjectURL(blob);
+      setVideoUrl(url);
+    } catch (err) {
+      console.error("Error fetching video:", err);
+    } finally {
+      setLoading(false);
     }
-
-    const blob = await response.blob();
-    const url = URL.createObjectURL(blob);
-    setVideoUrl(url);
   };
 
   const handleDelete = () => {
@@ -108,14 +116,21 @@ export default function Video() {
                   alt="Captured"
                   className="object-cover w-full h-full transition duration-300 ease-in-out brightness-75"
                 />
-                {/* Play Button Overlay */}
+
+                {/* Overlay: Play Button OR Spinner */}
                 <button
                   onClick={fetchAndPlayVideo}
+                  disabled={loading}
                   className="absolute inset-0 flex justify-center items-center group"
                 >
-                  <div className="bg-black/50 rounded-full p-6 transition duration-300 group-hover:bg-black/70">
-                    <Play className="w-10 h-10 text-white" />
-                  </div>
+                  {loading ? (
+                    // Spinner
+                    <div className="w-12 h-12 border-4 border-white border-t-transparent rounded-full animate-spin" />
+                  ) : (
+                    <div className="bg-black/50 rounded-full p-6 transition duration-300 group-hover:bg-black/70">
+                      <Play className="w-10 h-10 text-white" />
+                    </div>
+                  )}
                 </button>
               </>
             )}
@@ -129,7 +144,7 @@ export default function Video() {
           </div>
         </div>
 
-        {/* Capture Info (Top-aligned) */}
+        {/* Capture Info */}
         <div className="mt-8 lg:mt-0 text-left flex flex-col justify-start">
           <h1 className="text-2xl font-semibold mb-4">Capture Information</h1>
           <p className="hvs-text">Video from: {eventDate}</p>
