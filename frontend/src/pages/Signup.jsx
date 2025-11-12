@@ -30,6 +30,7 @@ function Login() {
 
         if (!response.ok) {
             setError(data.error)
+            return;
         }
 
         localStorage.setItem('token', data.token);
