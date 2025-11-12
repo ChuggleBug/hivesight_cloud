@@ -33,7 +33,7 @@ export default function VideoPreview( { id, image, creationDate} ) {
                 >
                     <img
                         src={image}
-                        className="h-full w-full transition duration-300 ease-in-out group-hover:brightness-75 group-focus:brightness-75"
+                        className="h-full w-full transition duration-300 ease-in-out group-hover:brightness-75 group-focus:brightness-75 shadow-2xl"
                     />
                 </button>
 

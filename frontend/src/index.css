@@ -48,14 +48,10 @@ h1 {
   @apply w-32 rounded px-5 py-1 text-white bg-hvs-black transition-colors duration-200;
 }
 
-.hvs_btn:hover,
-.hvs_btn:focus {
+.hvs_btn:hover {
   @apply bg-hvs-black-dark shadow-xl;
 }
 
-.hvs_btn:active {
-  @apply bg-hvs-yellow text-black;
-}
 
 .hvs_trash {
   color: var(--color-hvs-red);

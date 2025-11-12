@@ -1,6 +1,8 @@
 import { useState } from "react";
 import { useNavigate } from 'react-router-dom';
 
+import LocalStorageManager from "../util/localStorageManager";
+
 function Login() {
     const [error, setError] = useState("");
     const [username, setUsername] = useState("");
