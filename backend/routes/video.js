@@ -1,6 +1,6 @@
 import express from 'express';
 import fs from "fs/promises";
-import path from "path";
+import path, { resolve } from "path";
 import { spawn } from 'child_process';
 import ffmpegPath from 'ffmpeg-static';
 
@@ -45,7 +45,10 @@ videoRoutes.get("/previews", async (req, res) => {
     console.log(`${username} requesting video previews`);
 
     const user = await User.findOne({ username });
-    if (!user) return res.status(404).json({ error: "User not found" });
+    if (user === null) {
+      res.status(404).json({ error: "User not found" });
+      return; 
+    }
 
     const userVideos = await Video.find({ username }).sort({ creation_date: -1 });
 
@@ -73,10 +76,16 @@ videoRoutes.get("/preview", async (req, res) => {
   const video_id = req.query.video_id;
 
   const user = await User.findOne({ username });
-  if (!user) return res.status(404).json({ error: "User not found" });
+  if (user === null) {
+    res.status(404).json({ error: "User not found" })
+    return;
+  }
 
   const video = await Video.findOne({ username, video_id });
-  if (!video) return res.status(404).json({ error: "Video not found" });
+  if (video === null) {
+    res.status(404).json({ error: "Video not found" });
+    return;
+  } 
 
   const videoPath = path.join(user.video_root, video_id);
   const buffer = await generateThumbnailBuffer(videoPath);
@@ -94,11 +103,14 @@ videoRoutes.get("/play", async (req, res) => {
   try {
     const username = req.query.user;
     const video_id = req.query.video_id;
-
+    
     console.log(`${username} is requesting video ${video_id}`);
-
+    
     const user = await User.findOne({ username });
-    if (!user) return res.status(404).json({ error: "User not found" });
+    if (user === null) {
+      res.status(404).json({ error: "User not found" });
+      return;
+    }
 
     const videoPath = path.join(user.video_root, video_id);
 
@@ -158,12 +170,12 @@ videoRoutes.delete('/delete', async (req, res) => {
     const user = await User.findOne( { username } );
     const video = await Video.findOne( { username, video_id } );
 
-    if (!user) {
+    if (user === null) {
       res.status(404).json( { error: "User not found" } );
       return;
     }
 
-    if (!video) {
+    if (video === null) {
       res.status(404).json( {error: "Video not found" } );
       return;
     }

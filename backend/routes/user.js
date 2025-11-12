@@ -19,8 +19,8 @@ userRoutes.post('/login', async (req, res) => {
 
   // Validate user data
   const user = await User.findOne( { username: userauth.username } )
-  
-  if (!user) {
+
+  if (user === null) {
     res.status(401).json( { error: `Invalid user "${userauth.username}"` } )
     return;
   }
