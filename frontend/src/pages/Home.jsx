@@ -10,19 +10,57 @@ function Home() {
     const [loadError, setLoadError] = useState(false);
     const navigate = useNavigate();
 
+    const validateAuthToken = async () => {
+        if (!localStorage.getItem("token") || !localStorage.getItem("user")) {
+            return;
+        }
+
+
+        const response = await apiFetch("/api/user/validate", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                "username": localStorage.getItem("user"),
+                "token": localStorage.getItem("token")
+            })
+        });
+
+        if (!response.ok) {
+            localStorage.clear();
+            return;
+        }
+
+        const data = await response.json();
+
+        console.log(data)
+        console.log(data.token)
+        if (!data.valid) {
+            localStorage.clear();
+            return;
+        }
+
+        localStorage.setItem("token", data.token);
+    }
+
     // During development, vite loads the page twice.
     // This causes issues when displaying previews
     // on screen
     let complete = false;
     useEffect(() => {
-        if (complete) {
-            return;
-        }
-        if (!Boolean(localStorage.getItem('token'))) {
-            navigate("/login");
-        }
-        getVideoPreveiews();
-        complete = true;
+        validateAuthToken()
+            .then(() => {
+                if (complete) {
+                    return;
+                }
+                if (!Boolean(localStorage.getItem('token'))) {
+                    navigate("/login");
+                }
+                getVideoPreveiews();
+                complete = true;
+            })
+
     }, []);
 
     const getVideoPreveiews = async () => {

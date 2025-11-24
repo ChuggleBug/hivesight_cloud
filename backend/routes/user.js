@@ -60,4 +60,39 @@ userRoutes.put('/create-account', async (req, res) => {
   res.status(200).json( { token } );
 })
 
+userRoutes.post("/validate", async (req, res) => {
+  const { token } = req.body;
+
+  if (!token) {
+    return res.status(400).json({ error: "Token missing" });
+  }
+
+  try {
+    // Verify the old token
+    const decoded = jwt.verify(token, process.env.JWT_KEY);
+
+    // (optional but recommended) ensure user still exists
+    const user = await User.findOne({ username: decoded.name });
+    if (!user) {
+      return res.status(401).json({ error: "User no longer exists" });
+    }
+
+    // Generate a brand new token
+    const newToken = await generate_token({ username: decoded.name });
+
+
+    return res.status(200).json({
+      valid: true,
+      token: newToken
+    });
+
+  } catch (err) {
+    return res.status(401).json({
+      valid: false,
+      error: err.message
+    });
+  }
+});
+
+
 export default userRoutes
