@@ -34,8 +34,6 @@ function Home() {
 
         const data = await response.json();
 
-        console.log(data)
-        console.log(data.token)
         if (!data.valid) {
             localStorage.clear();
             return;
@@ -65,6 +63,10 @@ function Home() {
 
     const getVideoPreveiews = async () => {
         try {
+            if (!localStorage.getItem('user')) {
+                return;
+            }
+
             const response = await apiFetch(`/api/video/previews?user=${localStorage.getItem('user')}`)
             if (!response.ok) {
                 return;

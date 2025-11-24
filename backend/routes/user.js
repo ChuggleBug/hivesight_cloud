@@ -15,7 +15,7 @@ async function generate_token(auth_json) {
 
 userRoutes.post('/login', async (req, res) => {
   const userauth = req.body;
-  console.log(`User "${userauth.username}" attempting to login with "${userauth.password}"`)
+  console.log(`User "${userauth.username}" attempting to login...`);
 
   // Validate user data
   const user = await User.findOne( { username: userauth.username } )
@@ -30,14 +30,14 @@ userRoutes.post('/login', async (req, res) => {
     return;
   }
 
+  console.log(`Generating token for "${userauth.username}"...`);
   const token = await generate_token({username: userauth.username});
   res.status(200).json( { token });
-  console.log("Providing token: ", token);
 });
 
 userRoutes.put('/create-account', async (req, res) => {
   const userauth = req.body;
-  console.log(`User "${userauth.username}" attempting to sign up with a password of "${userauth.password}"`)
+  console.log(`Attempting to create user "${userauth.username}"...`);
 
   try {
     const user = new User({
@@ -56,12 +56,13 @@ userRoutes.put('/create-account', async (req, res) => {
     return;
   }
 
+  console.log(`User "${userauth.username}" created!`);
   const token = await generate_token({username: userauth.username});
   res.status(200).json( { token } );
 })
 
 userRoutes.post("/validate", async (req, res) => {
-  const { token } = req.body;
+  const { username, token } = req.body;  
 
   if (!token) {
     return res.status(400).json({ error: "Token missing" });
@@ -87,6 +88,7 @@ userRoutes.post("/validate", async (req, res) => {
     });
 
   } catch (err) {
+    console.log(`User "${username}"'s token expired!`);
     return res.status(401).json({
       valid: false,
       error: err.message

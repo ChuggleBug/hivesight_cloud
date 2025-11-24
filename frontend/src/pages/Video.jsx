@@ -21,7 +21,6 @@ export default function Video() {
     );
 
     if (!response.ok) {
-      console.log("Issue fetching video preview");
       return;
     }
 
@@ -56,7 +55,6 @@ export default function Video() {
       );
 
       if (!response.ok) {
-        console.log("Issue fetching video file");
         return;
       }
 
