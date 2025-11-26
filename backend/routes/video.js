@@ -1,12 +1,28 @@
 import express from 'express';
 import fs from "fs/promises";
-import path, { resolve } from "path";
+import path from "path";
 import { spawn } from 'child_process';
 import ffmpegPath from 'ffmpeg-static';
+import multer from 'multer'
 
 import { User, Video } from '../database/schema.js';
+import mongoose from 'mongoose';
 
 const videoRoutes = express.Router();
+
+// Store file in memory temporarily
+const upload = multer({
+  storage: multer.memoryStorage(),
+  limits: { fileSize: 200 * 1024 * 1024 },
+  fileFilter: (req, file, cb) => {
+    if (file.mimetype === 'video/mp4') {
+      cb(null, true);
+    } else {
+      cb(new Error('Only MP4 files allowed'), false);
+    }
+  }
+});
+
 
 async function generateThumbnailBuffer(inputPath) {
   if (!inputPath) throw new Error("Missing inputPath");
@@ -190,6 +206,47 @@ videoRoutes.delete('/delete', async (req, res) => {
   }
   catch (err) {
     console.log(err);
+  }
+});
+
+videoRoutes.put('/upload', upload.single('video'), async (req, res) => {
+  try {
+    if (!req.file) {
+      res.status(400).json({ error: 'No file uploaded' });
+      return;
+    }
+    const username = req.query.user;
+    console.log(username)
+
+    const user = await User.findOne({ username }); 
+
+    if (user === null) {
+      res.status(404).json( { error: "User not found" } );
+      return;
+    }
+
+    const saveDir = user.video_root
+    console.log(`Saving to ${saveDir}`)
+
+    // Enter session to ensure that fs and db are in sync
+    const session = await mongoose.startSession()
+
+    // Create db entry
+    const video = new Video( {
+      username,
+      creation_date: Date.now()
+    });
+    await video.save({ session });
+
+    const filePath = path.join(saveDir, video.video_id);
+    await fs.writeFile(filePath, req.file.buffer);
+
+    session.endSession();
+
+    
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: err.message });
   }
 });
 

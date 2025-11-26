@@ -1,4 +1,6 @@
 import { configDotenv } from 'dotenv';
+import path from 'path';
+
 console.log('Configuring Environment...');
 configDotenv();
 
@@ -51,13 +53,23 @@ const test_user_videos = [
   },
 ];
 // Creating videos 
-fs.mkdirSync(`${process.env.VIDEO_ROOT_DIR}/video/user`, { recursive: true });
+const destDir = `${process.env.VIDEO_ROOT_DIR}/video/user`;
+fs.mkdirSync(destDir, { recursive: true });
+fs.readdirSync(destDir).forEach(file => {
+  const filePath = path.join(destDir, file);
+  if (fs.lstatSync(filePath).isFile()) {
+    fs.unlinkSync(filePath);
+  }
+});
 test_user_videos.forEach(user_video => {
   const video = new Video(user_video);
   video.save();
-  fs.copyFileSync(`${process.env.VIDEO_ROOT_DIR}/${video.video_id}`, `${process.env.VIDEO_ROOT_DIR}/video/user/${video.video_id}`);
-});
 
+  fs.copyFileSync(
+    `${process.env.VIDEO_ROOT_DIR}/${video.video_id}`,
+    `${destDir}/${video.video_id}`
+  );
+});
 test_users.forEach(async (element) => {
   const user = new User({
     username: element.username, 

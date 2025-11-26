@@ -58,14 +58,15 @@ const videoSchema = new mongoose.Schema({
     },
     video_id: {
         type: String,
-        required: [true, "Video ID is required"],
-        trim: true
+        trim: true,
+        default: () => String(Math.floor(Math.random() * 1_000_000_000)) // random number → string
     },
     creation_date: {
         type: Date,
         required: [true, "Creation date is required"],
     }
 });
+
 
 export const User = mongoose.model('user', userSchema);
 export const Video = mongoose.model('video', videoSchema)
